@@ -1,0 +1,10 @@
+[
+  {"provider":"ollama","model":"llama3.2:3b",  "fewShotN":3,"structured":true, "promptVariant":"terse"},
+  {"provider":"ollama","model":"qwen2.5:7b",   "fewShotN":3,"structured":true, "promptVariant":"terse"},
+  {"provider":"ollama","model":"llama3.1:8b",  "fewShotN":3,"structured":true, "promptVariant":"terse"},
+
+  {"provider":"ollama","model":"qwen2.5:7b",   "fewShotN":0,"structured":true, "promptVariant":"terse"},
+  {"provider":"ollama","model":"qwen2.5:7b",   "fewShotN":8,"structured":true, "promptVariant":"terse"},
+  {"provider":"ollama","model":"qwen2.5:7b",   "fewShotN":3,"structured":false,"promptVariant":"terse"},
+  {"provider":"ollama","model":"qwen2.5:7b",   "fewShotN":3,"structured":true, "promptVariant":"rubric"}
+]
