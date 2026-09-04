@@ -1,0 +1,10 @@
+[
+  {"provider":"anthropic","model":"claude-haiku-4-5","fewShotN":3,"structured":true, "promptVariant":"terse"},
+  {"provider":"anthropic","model":"claude-sonnet-5", "fewShotN":3,"structured":true, "promptVariant":"terse"},
+  {"provider":"anthropic","model":"claude-opus-5",   "fewShotN":3,"structured":true, "promptVariant":"terse"},
+
+  {"provider":"anthropic","model":"claude-haiku-4-5","fewShotN":0,"structured":true, "promptVariant":"terse"},
+  {"provider":"anthropic","model":"claude-haiku-4-5","fewShotN":8,"structured":true, "promptVariant":"terse"},
+  {"provider":"anthropic","model":"claude-haiku-4-5","fewShotN":3,"structured":false,"promptVariant":"terse"},
+  {"provider":"anthropic","model":"claude-haiku-4-5","fewShotN":3,"structured":true, "promptVariant":"rubric"}
+]

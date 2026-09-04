@@ -7,6 +7,7 @@ import {
   type Provider,
 } from "../types.js";
 import { buildMessages, parseLooseCategory, systemPrompt, unstructuredSuffix } from "../prompts.js";
+import { supportsEffort } from "../eval/pricing.js";
 
 const TOOL_NAME = "classify_issue";
 
@@ -16,11 +17,16 @@ const TOOL_NAME = "classify_issue";
  * latency is a reported axis of this benchmark. Clean latency is worth more
  * than the saving at this budget.
  *
- * Thinking is left ON at `effort: "low"`. Disabling it on Opus 5 has a
- * documented failure mode where the model writes a tool call into visible text
- * instead of emitting a tool_use block -- which, since this path *forces* tool
- * use, would surface as a spurious invalid output and corrupt exactly the
- * metric the unstructured arm exists to measure.
+ * Thinking is left ON at `effort: "low"` where the model supports effort.
+ * Disabling it on Opus 5 has a documented failure mode where the model writes
+ * a tool call into visible text instead of emitting a tool_use block -- which,
+ * since this path *forces* tool use, would surface as a spurious invalid
+ * output and corrupt exactly the metric the unstructured arm exists to
+ * measure.
+ *
+ * Haiku 4.5 predates `output_config.effort` and 400s on it, so the parameter
+ * is applied per-model capability rather than unconditionally. Haiku also has
+ * no thinking by default, which is the desired shape for classification.
  */
 const MAX_TOKENS = 1024;
 
@@ -64,6 +70,7 @@ export const anthropicProvider: Provider = {
         : systemPrompt(config.promptVariant) + unstructuredSuffix();
 
       const messages = turns.map((t) => ({ role: t.role, content: t.content }));
+      const effort = supportsEffort(model) ? { output_config: { effort: "low" as const } } : {};
 
       if (config.structured) {
         const res = await getClient().messages.create({
@@ -71,7 +78,7 @@ export const anthropicProvider: Provider = {
           max_tokens: MAX_TOKENS,
           system,
           messages,
-          output_config: { effort: "low" },
+          ...effort,
           tools: [
             {
               name: TOOL_NAME,
@@ -107,7 +114,7 @@ export const anthropicProvider: Provider = {
         max_tokens: MAX_TOKENS,
         system,
         messages,
-        output_config: { effort: "low" },
+        ...effort,
       });
 
       const { input, output } = tokens(res.usage);

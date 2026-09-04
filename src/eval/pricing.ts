@@ -17,6 +17,17 @@ const PRICES: Record<string, Price> = {
   "claude-opus-5": { input: 5, output: 25, label: "Claude Opus 5 (hosted, large)" },
 };
 
+/**
+ * `output_config.effort` is not universal. Haiku 4.5 predates it and returns
+ * `400 This model does not support the effort parameter`; Sonnet 5 and Opus 5
+ * accept low..max. Sending it unconditionally fails every hosted Haiku call.
+ */
+const SUPPORTS_EFFORT = new Set(["claude-sonnet-5", "claude-opus-5"]);
+
+export function supportsEffort(model: string): boolean {
+  return SUPPORTS_EFFORT.has(model);
+}
+
 const LOCAL_LABELS: Record<string, string> = {
   "llama3.2:3b": "Llama 3.2 3B (local, ~2.0GB)",
   "qwen2.5:7b": "Qwen 2.5 7B (local, ~4.7GB)",
